@@ -1,0 +1,66 @@
+name: Python Package Publish
+
+on:
+  push:
+    branches:
+      - main  # Adjust if your main branch is named differently
+    paths:
+      - "setup.py"
+      - "pyproject.toml"
+      - "requirements.txt"
+      - "src/**"
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run tests
+        run: |
+          python -m pip install pytest
+          python -m pytest
+
+      - name: Build package
+        run: python -m build
+
+      - name: Check distribution
+        run: |
+          python -m twine check dist/*
+
+      - name: Publish to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          python -m twine upload --verbose dist/*
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        with:
+          files: dist/*
+          generate_release_notes: true
+
+      - name: Cleanup build artifacts
+        if: always()
+        run: rm -rf dist build *.egg-info
