@@ -56,18 +56,18 @@ This repository contains a powerful coding assistant application that integrates
    Using pip:
    ```bash
    pip install -r requirements.txt
-   python3 main.py
+   python3 src/deepseek_r1/main.py
    ```
 
    Using uv (recommended for speed):
    ```bash
    uv venv
-   uv run main.py
+   uv run src/deepseek_r1/main.py
    ```
 
 ## Advanced Features: Reasoning Model
 
-The `r1.py` script provides enhanced capabilities using DeepSeek's Reasoning Model:
+The `src/deepseek_r1/r1.py` script provides enhanced capabilities using DeepSeek's Reasoning Model:
 
 - Chain of Thought (CoT) reasoning visualization
 - Transparent decision-making process
@@ -76,3 +76,6 @@ The `r1.py` script provides enhanced capabilities using DeepSeek's Reasoning Mod
 - Clean conversation history
 
 Usage:
+```bash
+python3 src/deepseek_r1/r1.py
+```
