@@ -76,3 +76,6 @@ The `r1.py` script provides enhanced capabilities using DeepSeek's Reasoning Mod
 - Clean conversation history
 
 Usage:
+```bash
+python3 src/deepseek_r1/r1.py
+```
